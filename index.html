@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>lapocard</title>
+    <link rel="stylesheet" href="https://unpkg.com/mvp.css">
+    <style>
+        body{
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items:center;
+        }
+        .flex{
+            display:flex;
+            justify-content:center;
+            width: 100%;
+            max-width: 600px;
+        }
+        .card {
+            cursor: pointer;
+            width:50%;
+        }
+        .random-card {
+            cursor: pointer;
+        }
+        .selected.container{
+            justify-content:center;
+            align-items:center;
+            width: 100%;
+            height: 100%;
+            background-color: #0007;
+            display:none;
+            position: absolute;
+            top: 0;
+        }
+        .selected.container #random{
+            max-width: 300px;
+        }
+        .selected.container.visible{
+            display:flex;
+        }
+    </style>
+</head>
+<body>
+    <div class="flex">
+        <div class="card" onclick="renderRandomOne('character')" id="character">
+         <img src="https://hjchurch.net/assets/images/lafocard/character/character%20(0).jpg" width="90%">
+        </div> 
+        <div class="card" onclick="renderRandomOne('if')" id="if">
+         <img src="https://hjchurch.net/assets/images/lafocard/if/if%20(0).jpg" width="90%">
+        </div> 
+    </div>
+    <div class="flex">
+        <div class="card" onclick="renderRandomOne('life')" id="life">
+        <img src="https://hjchurch.net/assets/images/lafocard/life/life%20(0).jpg" width="90%">
+        </div> 
+        <div class="card" onclick="renderRandomOne('potentiality')" id="potentiality">
+        <img src="https://hjchurch.net/assets/images/lafocard/potentiality/potentiality%20(0).jpg" width="90%">
+        </div> 
+    </div>
+    <div class="flex">
+        <div class="card" onclick="renderRandomOne('relationship')" id="relationship">
+            <img src="https://hjchurch.net/assets/images/lafocard/relationship/relationship%20(1).JPG" width="90%">
+        </div> 
+    </div>
+    <div class="selected container" id ="selected_container" onclick="closePopup();">
+        <div class="random-card">
+            <img id= "random" src="" loading="lazy"/>
+        </div>
+    </div>
+</body>
+<script type="text/javascript">
+    const assetsDir = "/assets/images/lafocard";
+    const cards = {
+        "character":["character (0).jpg","character (1).jpg","character (10).jpg","character (11).jpg","character (12).jpg","character (13).jpg","character (14).jpg","character (15).jpg","character (16).jpg","character (17).jpg","character (18).jpg","character (19).jpg","character (2).jpg","character (20).jpg","character (21).jpg","character (22).jpg","character (23).jpg","character (24).jpg","character (25).jpg","character (26).jpg","character (27).jpg","character (28).jpg","character (29).jpg","character (3).jpg","character (30).jpg","character (31).jpg","character (32).jpg","character (33).jpg","character (34).jpg","character (35).jpg","character (36).jpg","character (37).jpg","character (38).jpg","character (4).jpg","character (5).jpg","character (6).jpg","character (7).jpg","character (8).jpg","character (9).jpg"],
+        "if":["if (1).jpg","if (10).jpg","if (11).jpg","if (12).jpg","if (13).jpg","if (14).jpg","if (15).jpg","if (16).jpg","if (17).jpg","if (18).jpg","if (19).jpg","if (2).jpg","if (20).jpg","if (21).jpg","if (22).jpg","if (23).jpg","if (24).jpg","if (25).jpg","if (26).jpg","if (27).jpg","if (28).jpg","if (29).jpg","if (3).jpg","if (30).jpg","if (4).jpg","if (5).jpg","if (6).jpg","if (7).jpg","if (8).jpg","if (9).jpg"],
+        "life":["life (1).jpg","life (10).jpg","life (11).jpg","life (12).jpg","life (13).jpg","life (14).jpg","life (15).jpg","life (16).jpg","life (17).jpg","life (18).jpg","life (19).jpg","life (2).jpg","life (20).jpg","life (21).jpg","life (22).jpg","life (23).jpg","life (24).jpg","life (25).jpg","life (26).jpg","life (27).jpg","life (3).jpg","life (4).jpg","life (5).jpg","life (6).jpg","life (7).jpg","life (8).jpg","life (9).jpg"],
+        "potentiality":["potentiality (1).jpg","potentiality (10).jpg","potentiality (11).jpg","potentiality (12).jpg","potentiality (13).jpg","potentiality (14).jpg","potentiality (15).jpg","potentiality (16).jpg","potentiality (17).jpg","potentiality (18).jpg","potentiality (19).jpg","potentiality (2).jpg","potentiality (20).jpg","potentiality (21).jpg","potentiality (22).jpg","potentiality (3).jpg","potentiality (4).jpg","potentiality (5).jpg","potentiality (6).jpg","potentiality (7).jpg","potentiality (8).jpg","potentiality (9).jpg"],
+        "relationship":["relationship (1).JPG","relationship (10).JPG","relationship (11).JPG","relationship (12).JPG","relationship (13).JPG","relationship (14).JPG","relationship (15).JPG","relationship (16).JPG","relationship (17).JPG","relationship (18).JPG","relationship (19).JPG","relationship (2).JPG","relationship (20).JPG","relationship (3).JPG","relationship (4).JPG","relationship (5).JPG","relationship (6).JPG","relationship (7).JPG","relationship (8).JPG","relationship (9).JPG"]
+    }
+
+    function renderRandomOne(key){
+        var url = `https://hjchurch.net/${assetsDir}/${key}/`
+        var deck = cards[key];
+        var length = deck.length
+        var randomIndex = Math.floor(Math.random() * length);
+        var img = document.getElementById('random')
+        var imgPopUp = document.getElementById('selected_container')
+        img.src = url+deck[randomIndex];
+        imgPopUp.classList.add('visible')
+    }
+    function closePopup(){
+        var imgPopUp = document.getElementById('selected_container')
+        imgPopUp.classList.remove('visible')
+    }
+
+</script>
+</html>
