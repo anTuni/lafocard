@@ -1,101 +1,410 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ko">
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>lapocard</title>
-    <link rel="stylesheet" href="https://unpkg.com/mvp.css">
-    <style>
-        body{
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items:center;
-        }
-        .flex{
-            display:flex;
-            justify-content:center;
-            width: 100%;
-            max-width: 600px;
-        }
-        .card {
-            cursor: pointer;
-            width:50%;
-        }
-        .random-card {
-            cursor: pointer;
-        }
-        .selected.container{
-            justify-content:center;
-            align-items:center;
-            width: 100%;
-            height: 100%;
-            background-color: #0007;
-            display:none;
-            position: absolute;
-            top: 0;
-        }
-        .selected.container #random{
-            max-width: 300px;
-        }
-        .selected.container.visible{
-            display:flex;
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>라포카드 · 이야기를 여는 질문</title>
+<style>
+:root{
+  --bg:#f5f3ef;
+  --panel:#ffffff;
+  --ink:#2b2b2f;
+  --muted:#8a8a93;
+  --line:#eceae4;
+  --shadow:0 10px 30px rgba(30,25,20,.12);
+  --radius:20px;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+html,body{margin:0;padding:0;}
+body{
+  font-family:"Apple SD Gothic Neo","Malgun Gothic","Noto Sans KR",system-ui,-apple-system,sans-serif;
+  background:var(--bg);
+  color:var(--ink);
+  min-height:100vh;
+  -webkit-font-smoothing:antialiased;
+}
+button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit;}
+img{display:block;}
+
+/* ---------- Layout ---------- */
+.app{max-width:760px;margin:0 auto;padding:20px 18px 90px;}
+header.top{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:6px 2px 18px;
+}
+.brand{display:flex;flex-direction:column;gap:2px;}
+.brand h1{font-size:24px;margin:0;letter-spacing:-.5px;font-weight:800;}
+.brand .tag{font-size:12.5px;color:var(--muted);letter-spacing:.2px;}
+.top-actions{display:flex;gap:8px;}
+.icon-btn{
+  width:44px;height:44px;border-radius:14px;background:var(--panel);
+  display:flex;align-items:center;justify-content:center;font-size:19px;
+  box-shadow:0 2px 8px rgba(30,25,20,.06);position:relative;transition:transform .12s;
+}
+.icon-btn:active{transform:scale(.92);}
+.icon-btn .badge{
+  position:absolute;top:-4px;right:-4px;background:#e85d5d;color:#fff;
+  font-size:10px;min-width:17px;height:17px;border-radius:9px;padding:0 4px;
+  display:flex;align-items:center;justify-content:center;font-weight:700;
+}
+
+/* ---------- Hero draw ---------- */
+.hero{
+  background:linear-gradient(135deg,#2b2b2f,#44414b);
+  color:#fff;border-radius:var(--radius);padding:22px;margin-bottom:22px;
+  display:flex;align-items:center;justify-content:space-between;gap:16px;
+  box-shadow:var(--shadow);
+}
+.hero .txt h2{margin:0 0 4px;font-size:18px;font-weight:800;}
+.hero .txt p{margin:0;font-size:13px;color:#d8d5db;line-height:1.5;}
+.hero button{
+  background:#fff;color:#2b2b2f;font-weight:800;font-size:15px;
+  padding:14px 20px;border-radius:14px;white-space:nowrap;transition:transform .12s;
+}
+.hero button:active{transform:scale(.94);}
+
+/* ---------- Section ---------- */
+.section-title{
+  display:flex;align-items:baseline;justify-content:space-between;
+  margin:6px 4px 14px;
+}
+.section-title h3{margin:0;font-size:16px;font-weight:800;}
+.section-title span{font-size:12.5px;color:var(--muted);}
+
+/* ---------- Category grid ---------- */
+.cat-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;}
+@media(min-width:620px){.cat-grid{grid-template-columns:repeat(3,1fr);}}
+.cat{
+  background:var(--panel);border-radius:var(--radius);overflow:hidden;
+  box-shadow:0 4px 14px rgba(30,25,20,.07);transition:transform .14s, box-shadow .14s;
+  display:flex;flex-direction:column;
+}
+.cat:active{transform:scale(.97);}
+.cat .cover{position:relative;padding-top:132%;overflow:hidden;background:var(--line);}
+.cat .cover img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;}
+.cat .cover .count{
+  position:absolute;top:10px;right:10px;background:rgba(0,0,0,.35);color:#fff;
+  font-size:11px;font-weight:700;padding:3px 8px;border-radius:20px;backdrop-filter:blur(4px);
+}
+.cat .foot{display:flex;gap:8px;padding:10px;}
+.cat .foot button{
+  flex:1;border-radius:11px;padding:9px 0;font-size:13px;font-weight:800;transition:filter .12s,transform .1s;
+}
+.cat .foot button:active{transform:scale(.95);}
+.cat .foot .draw{color:#fff;}
+.cat .foot .browse{background:var(--line);color:#4b4b52;}
+.cat .foot .browse:active{filter:brightness(.96);}
+
+/* ---------- Popup / Modal ---------- */
+.overlay{
+  position:fixed;inset:0;background:rgba(20,17,15,.62);backdrop-filter:blur(6px);
+  display:none;align-items:center;justify-content:center;z-index:50;padding:20px;
+  animation:fade .2s ease;
+}
+.overlay.show{display:flex;}
+@keyframes fade{from{opacity:0}to{opacity:1}}
+.modal{
+  width:100%;max-width:420px;display:flex;flex-direction:column;align-items:center;gap:16px;
+}
+.card-frame{
+  width:100%;max-width:340px;border-radius:22px;overflow:hidden;box-shadow:0 20px 50px rgba(0,0,0,.4);
+  background:#fff;position:relative;animation:pop .32s cubic-bezier(.2,.9,.3,1.2);
+}
+@keyframes pop{from{opacity:0;transform:translateY(14px) scale(.9)}to{opacity:1;transform:none}}
+.card-frame.flip{animation:flip .45s ease;}
+@keyframes flip{0%{transform:rotateY(90deg);opacity:.3}100%{transform:rotateY(0);opacity:1}}
+.card-frame img{width:100%;height:auto;}
+.card-meta{color:#fff;font-size:13px;font-weight:700;opacity:.9;letter-spacing:.3px;}
+.modal-actions{display:flex;gap:10px;width:100%;max-width:340px;}
+.modal-actions button{
+  flex:1;padding:14px 0;border-radius:14px;font-size:14px;font-weight:800;
+  background:rgba(255,255,255,.14);color:#fff;transition:transform .1s,background .12s;
+  display:flex;align-items:center;justify-content:center;gap:6px;
+}
+.modal-actions button:active{transform:scale(.94);}
+.modal-actions button.primary{background:#fff;color:#2b2b2f;}
+.modal-actions button.fav.on{background:#e85d5d;color:#fff;}
+.close-hint{color:rgba(255,255,255,.55);font-size:12px;}
+
+/* ---------- Browse sheet ---------- */
+.sheet{
+  position:fixed;inset:0;z-index:40;background:var(--bg);display:none;flex-direction:column;
+  animation:slideUp .28s ease;
+}
+.sheet.show{display:flex;}
+@keyframes slideUp{from{transform:translateY(24px);opacity:0}to{transform:none;opacity:1}}
+.sheet-head{
+  display:flex;align-items:center;gap:12px;padding:16px 18px;border-bottom:1px solid var(--line);
+  background:var(--panel);
+}
+.sheet-head .back{font-size:20px;width:40px;height:40px;border-radius:12px;background:var(--line);
+  display:flex;align-items:center;justify-content:center;}
+.sheet-head .stitle{font-size:17px;font-weight:800;}
+.sheet-head .stitle small{display:block;font-size:12px;font-weight:600;color:var(--muted);}
+.sheet-body{overflow-y:auto;padding:18px;flex:1;}
+.browse-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;max-width:760px;margin:0 auto;}
+@media(min-width:520px){.browse-grid{grid-template-columns:repeat(3,1fr);}}
+.thumb{border-radius:14px;overflow:hidden;box-shadow:0 3px 10px rgba(30,25,20,.08);
+  background:#fff;transition:transform .12s;position:relative;}
+.thumb:active{transform:scale(.96);}
+.thumb img{width:100%;height:auto;}
+.thumb .num{position:absolute;top:7px;left:7px;background:rgba(0,0,0,.4);color:#fff;
+  font-size:10px;font-weight:700;width:22px;height:22px;border-radius:11px;display:flex;
+  align-items:center;justify-content:center;}
+.thumb .heart{position:absolute;top:7px;right:7px;font-size:14px;opacity:0;transition:opacity .15s;}
+.thumb.faved .heart{opacity:1;}
+
+/* ---------- Library (favorites/history) ---------- */
+.lib-tabs{display:flex;gap:8px;padding:14px 18px 0;background:var(--panel);}
+.lib-tabs button{
+  flex:1;padding:11px 0;border-radius:12px;font-weight:800;font-size:14px;
+  background:var(--line);color:var(--muted);
+}
+.lib-tabs button.active{background:#2b2b2f;color:#fff;}
+.empty{text-align:center;color:var(--muted);padding:60px 20px;font-size:14px;line-height:1.6;}
+.empty .big{font-size:40px;margin-bottom:10px;}
+.lib-actions{display:flex;justify-content:flex-end;padding:0 18px;max-width:760px;margin:12px auto 0;}
+.lib-actions button{font-size:12.5px;color:var(--muted);text-decoration:underline;}
+</style>
 </head>
 <body>
-    <div class="flex">
-        <div class="card" onclick="renderRandomOne('character')" id="character">
-         <img src="images/lafocard/character/character%20(0).jpg" width="90%">
-        </div> 
-        <div class="card" onclick="renderRandomOne('if')" id="if">
-         <img src="images/lafocard/if/if%20(0).jpg" width="90%">
-        </div> 
+<div class="app">
+  <header class="top">
+    <div class="brand">
+      <h1>라포카드</h1>
+      <span class="tag">한 장을 뽑아, 이야기를 열어요</span>
     </div>
-    <div class="flex">
-        <div class="card" onclick="renderRandomOne('life')" id="life">
-        <img src="images/lafocard/life/life%20(0).jpg" width="90%">
-        </div> 
-        <div class="card" onclick="renderRandomOne('potentiality')" id="potentiality">
-        <img src="images/lafocard/potentiality/potentiality%20(0).jpg" width="90%">
-        </div> 
+    <div class="top-actions">
+      <button class="icon-btn" onclick="openLibrary('fav')" title="즐겨찾기·기록">
+        <span>❤</span><span class="badge" id="favBadge" style="display:none">0</span>
+      </button>
     </div>
-    <div class="flex">
-        <div class="card" onclick="renderRandomOne('relationship')" id="relationship">
-            <img src="images/lafocard/relationship/relationship%20(1).JPG" width="90%">
-        </div> 
-    </div>
-    <div class="selected container" id ="selected_container" onclick="closePopup();">
-        <div class="random-card">
-            <img id= "random" src="" loading="lazy"/>
-        </div>
-    </div>
-</body>
-<script type="text/javascript">
-    const assetsDir = "images/lafocard";
-    const cards = {
-        "character":["character (0).jpg","character (1).jpg","character (10).jpg","character (11).jpg","character (12).jpg","character (13).jpg","character (14).jpg","character (15).jpg","character (16).jpg","character (17).jpg","character (18).jpg","character (19).jpg","character (2).jpg","character (20).jpg","character (21).jpg","character (22).jpg","character (23).jpg","character (24).jpg","character (25).jpg","character (26).jpg","character (27).jpg","character (28).jpg","character (29).jpg","character (3).jpg","character (30).jpg","character (31).jpg","character (32).jpg","character (33).jpg","character (34).jpg","character (35).jpg","character (36).jpg","character (37).jpg","character (38).jpg","character (4).jpg","character (5).jpg","character (6).jpg","character (7).jpg","character (8).jpg","character (9).jpg"],
-        "if":["if (1).jpg","if (10).jpg","if (11).jpg","if (12).jpg","if (13).jpg","if (14).jpg","if (15).jpg","if (16).jpg","if (17).jpg","if (18).jpg","if (19).jpg","if (2).jpg","if (20).jpg","if (21).jpg","if (22).jpg","if (23).jpg","if (24).jpg","if (25).jpg","if (26).jpg","if (27).jpg","if (28).jpg","if (29).jpg","if (3).jpg","if (30).jpg","if (4).jpg","if (5).jpg","if (6).jpg","if (7).jpg","if (8).jpg","if (9).jpg"],
-        "life":["life (1).jpg","life (10).jpg","life (11).jpg","life (12).jpg","life (13).jpg","life (14).jpg","life (15).jpg","life (16).jpg","life (17).jpg","life (18).jpg","life (19).jpg","life (2).jpg","life (20).jpg","life (21).jpg","life (22).jpg","life (23).jpg","life (24).jpg","life (25).jpg","life (26).jpg","life (27).jpg","life (3).jpg","life (4).jpg","life (5).jpg","life (6).jpg","life (7).jpg","life (8).jpg","life (9).jpg"],
-        "potentiality":["potentiality (1).jpg","potentiality (10).jpg","potentiality (11).jpg","potentiality (12).jpg","potentiality (13).jpg","potentiality (14).jpg","potentiality (15).jpg","potentiality (16).jpg","potentiality (17).jpg","potentiality (18).jpg","potentiality (19).jpg","potentiality (2).jpg","potentiality (20).jpg","potentiality (21).jpg","potentiality (22).jpg","potentiality (3).jpg","potentiality (4).jpg","potentiality (5).jpg","potentiality (6).jpg","potentiality (7).jpg","potentiality (8).jpg","potentiality (9).jpg"],
-        "relationship":["relationship (10).JPG","relationship (11).JPG","relationship (12).JPG","relationship (13).JPG","relationship (14).JPG","relationship (15).JPG","relationship (16).JPG","relationship (17).JPG","relationship (18).JPG","relationship (19).JPG","relationship (2).JPG","relationship (20).JPG","relationship (3).JPG","relationship (4).JPG","relationship (5).JPG","relationship (6).JPG","relationship (7).JPG","relationship (8).JPG","relationship (9).JPG"]
-    }
+  </header>
 
-    function renderRandomOne(key){
-        var url = `${assetsDir}/${key}/`
-        var deck = cards[key];
-        var length = deck.length
-        var randomIndex = Math.floor(Math.random() * length);
-        var img = document.getElementById('random')
-        var imgPopUp = document.getElementById('selected_container')
-        img.src = url+deck[randomIndex];
-        imgPopUp.classList.add('visible')
-    }
-    function closePopup(){
-        var imgPopUp = document.getElementById('selected_container')
-        imgPopUp.classList.remove('visible')
-    }
+  <div class="hero">
+    <div class="txt">
+      <h2>🎲 전체 랜덤 뽑기</h2>
+      <p>모든 카테고리를 섞어<br>한 장을 뽑습니다</p>
+    </div>
+    <button onclick="drawRandom(null)">뽑기</button>
+  </div>
 
+  <div class="section-title">
+    <h3>카테고리</h3>
+    <span id="totalCount"></span>
+  </div>
+  <div class="cat-grid" id="catGrid"></div>
+</div>
+
+<!-- Draw popup -->
+<div class="overlay" id="overlay">
+  <div class="modal">
+    <div class="card-frame" id="cardFrame"><img id="cardImg" src="" alt="질문 카드"></div>
+    <div class="card-meta" id="cardCat"></div>
+    <div class="modal-actions">
+      <button class="fav" id="favBtn" onclick="toggleFav()">♡ 저장</button>
+      <button class="primary" id="redrawBtn" onclick="redraw()">🔄 다시 뽑기</button>
+      <button onclick="closeOverlay()">닫기</button>
+    </div>
+    <div class="close-hint">바깥을 눌러도 닫혀요</div>
+  </div>
+</div>
+
+<!-- Browse sheet -->
+<div class="sheet" id="browseSheet">
+  <div class="sheet-head">
+    <button class="back" onclick="closeBrowse()">‹</button>
+    <div class="stitle" id="browseTitle">탐색<small id="browseSub"></small></div>
+  </div>
+  <div class="sheet-body">
+    <div class="browse-grid" id="browseGrid"></div>
+  </div>
+</div>
+
+<!-- Library sheet -->
+<div class="sheet" id="librarySheet">
+  <div class="sheet-head">
+    <button class="back" onclick="closeLibrary()">‹</button>
+    <div class="stitle">보관함<small>저장한 카드와 최근 기록</small></div>
+  </div>
+  <div class="lib-tabs">
+    <button id="tabFav" class="active" onclick="switchLibTab('fav')">❤ 즐겨찾기</button>
+    <button id="tabHist" onclick="switchLibTab('hist')">🕘 최근 기록</button>
+  </div>
+  <div class="lib-actions"><button id="clearBtn" onclick="clearCurrentLib()"></button></div>
+  <div class="sheet-body">
+    <div class="browse-grid" id="libGrid"></div>
+  </div>
+</div>
+
+<script>
+const assetsDir = "images/lafocard";
+const CATS = {
+  character:   {ko:"개성",   sub:"Character",    color:"#9285c9", cover:"character (0).jpg"},
+  if:          {ko:"만약에",  sub:"If",            color:"#e8871e", cover:"if (0).jpg"},
+  life:        {ko:"인생",   sub:"Life",          color:"#4fbf98", cover:"life (0).jpg"},
+  potentiality:{ko:"잠재력",  sub:"Potentiality", color:"#2e5a82", cover:"potentiality (1).jpeg", coverAlt:"potentiality (0).jpg"},
+  relationship:{ko:"관계",   sub:"Relationship", color:"#e85d5d", cover:"relationship (1).JPG"}
+};
+const DECK = {
+  "character":["character (1).jpg","character (2).jpg","character (3).jpg","character (4).jpg","character (5).jpg","character (6).jpg","character (7).jpg","character (8).jpg","character (9).jpg","character (10).jpg","character (11).jpg","character (12).jpg","character (13).jpg","character (14).jpg","character (15).jpg","character (16).jpg","character (17).jpg","character (18).jpg","character (19).jpg","character (20).jpg","character (21).jpg","character (22).jpg","character (23).jpg","character (24).jpg","character (25).jpg","character (26).jpg","character (27).jpg","character (28).jpg","character (29).jpg","character (30).jpg","character (31).jpg","character (32).jpg","character (33).jpg","character (34).jpg","character (35).jpg","character (36).jpg","character (37).jpg","character (38).jpg"],
+  "if":["if (1).jpg","if (2).jpg","if (3).jpg","if (4).jpg","if (5).jpg","if (6).jpg","if (7).jpg","if (8).jpg","if (9).jpg","if (10).jpg","if (11).jpg","if (12).jpg","if (13).jpg","if (14).jpg","if (15).jpg","if (16).jpg","if (17).jpg","if (18).jpg","if (19).jpg","if (20).jpg","if (21).jpg","if (22).jpg","if (23).jpg","if (24).jpg","if (25).jpg","if (26).jpg","if (27).jpg","if (28).jpg","if (29).jpg","if (30).jpg"],
+  "life":["life (1).jpg","life (2).jpg","life (3).jpg","life (4).jpeg","life (5).jpg","life (6).jpg","life (7).jpg","life (8).jpg","life (9).jpg","life (10).jpg","life (11).jpg","life (12).jpg","life (13).jpg","life (14).jpg","life (15).jpg","life (16).jpg","life (17).jpg","life (18).jpg","life (19).jpg","life (20).jpg","life (21).jpg","life (22).jpg","life (23).jpg","life (24).jpg","life (25).jpg","life (26).jpg","life (27).jpg"],
+  "potentiality":["potentiality (1).jpeg","potentiality (2).jpg","potentiality (3).jpg","potentiality (4).jpg","potentiality (5).jpg","potentiality (6).jpg","potentiality (7).jpg","potentiality (8).jpg","potentiality (9).jpg","potentiality (10).jpg","potentiality (11).jpg","potentiality (12).jpg","potentiality (13).jpg","potentiality (14).jpg","potentiality (15).jpg","potentiality (16).jpg","potentiality (17).jpg","potentiality (18).jpg","potentiality (19).jpg","potentiality (20).jpg","potentiality (21).jpg","potentiality (22).jpg"],
+  "relationship":["relationship (2).JPG","relationship (3).JPG","relationship (4).JPG","relationship (5).JPG","relationship (6).JPG","relationship (7).JPG","relationship (8).JPG","relationship (9).JPG","relationship (10).JPG","relationship (11).JPG","relationship (12).JPG","relationship (13).JPG","relationship (14).JPG","relationship (15).JPG","relationship (16).JPG","relationship (17).JPG","relationship (18).JPG","relationship (19).JPG","relationship (20).JPG"]
+};
+
+/* ---------- storage ---------- */
+const LS_FAV="lafocard_fav", LS_HIST="lafocard_hist";
+function load(k){try{return JSON.parse(localStorage.getItem(k))||[]}catch(e){return[]}}
+function save(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}
+let favs=load(LS_FAV), hist=load(LS_HIST);
+function cardId(cat,file){return cat+"/"+file;}
+function isFav(cat,file){return favs.some(f=>f.id===cardId(cat,file));}
+function url(cat,file){return encodeURI(assetsDir+"/"+cat+"/"+file);}
+
+/* ---------- render home ---------- */
+function renderHome(){
+  const grid=document.getElementById("catGrid");
+  let total=0;
+  grid.innerHTML=Object.entries(CATS).map(([key,c])=>{
+    const n=DECK[key].length; total+=n;
+    return `<div class="cat">
+      <div class="cover">
+        <img src="${url(key,c.cover)}" alt="${c.ko}" loading="lazy"
+             onerror="this.onerror=null;this.src='${c.coverAlt?url(key,c.coverAlt):''}'">
+        <span class="count">${n}장</span>
+      </div>
+      <div class="foot">
+        <button class="draw" style="background:${c.color}" onclick="drawRandom('${key}')">뽑기</button>
+        <button class="browse" onclick="openBrowse('${key}')">탐색</button>
+      </div>
+    </div>`;
+  }).join("");
+  document.getElementById("totalCount").textContent="총 "+total+"장";
+  updateFavBadge();
+}
+function updateFavBadge(){
+  const b=document.getElementById("favBadge");
+  if(favs.length){b.style.display="flex";b.textContent=favs.length;}
+  else b.style.display="none";
+}
+
+/* ---------- draw ---------- */
+let current=null; // {cat,file}
+function pick(cat){
+  const key=cat||Object.keys(DECK)[Math.floor(Math.random()*5)];
+  const deck=DECK[key];
+  const file=deck[Math.floor(Math.random()*deck.length)];
+  return {cat:key,file};
+}
+function drawRandom(cat){
+  current=pick(cat);
+  showCard(true);
+  addHistory(current);
+  document.getElementById("redrawBtn").dataset.scope=cat||"";
+}
+function redraw(){
+  const scope=document.getElementById("redrawBtn").dataset.scope;
+  current=pick(scope||null);
+  showCard(true);
+  addHistory(current);
+}
+function showCard(flip){
+  const {cat,file}=current;
+  const img=document.getElementById("cardImg");
+  const frame=document.getElementById("cardFrame");
+  img.src=url(cat,file);
+  document.getElementById("cardCat").textContent=CATS[cat].ko+" · "+CATS[cat].sub;
+  const favBtn=document.getElementById("favBtn");
+  if(isFav(cat,file)){favBtn.classList.add("on");favBtn.innerHTML="❤ 저장됨";}
+  else{favBtn.classList.remove("on");favBtn.innerHTML="♡ 저장";}
+  document.getElementById("overlay").classList.add("show");
+  if(flip){frame.classList.remove("flip");void frame.offsetWidth;frame.classList.add("flip");}
+}
+function closeOverlay(){document.getElementById("overlay").classList.remove("show");}
+document.getElementById("overlay").addEventListener("click",e=>{
+  if(e.target.id==="overlay")closeOverlay();
+});
+
+/* ---------- favorites ---------- */
+function toggleFav(){
+  const {cat,file}=current, id=cardId(cat,file);
+  if(isFav(cat,file)){favs=favs.filter(f=>f.id!==id);}
+  else{favs.unshift({id,cat,file,ts:Date.now()});}
+  save(LS_FAV,favs);
+  showCard(false);
+  updateFavBadge();
+}
+function addHistory(c){
+  const id=cardId(c.cat,c.file);
+  hist=hist.filter(h=>h.id!==id);
+  hist.unshift({id,cat:c.cat,file:c.file,ts:Date.now()});
+  if(hist.length>60)hist=hist.slice(0,60);
+  save(LS_HIST,hist);
+}
+
+/* ---------- browse ---------- */
+function openBrowse(cat){
+  const c=CATS[cat];
+  document.getElementById("browseTitle").firstChild.textContent=c.ko+" ";
+  document.getElementById("browseSub").textContent=c.sub+" · "+DECK[cat].length+"개의 질문";
+  const grid=document.getElementById("browseGrid");
+  grid.innerHTML=DECK[cat].map((file,i)=>`
+    <div class="thumb ${isFav(cat,file)?'faved':''}" onclick="openFromBrowse('${cat}','${file.replace(/'/g,"\\'")}')">
+      <span class="num">${i+1}</span><span class="heart">❤</span>
+      <img src="${url(cat,file)}" loading="lazy" alt="${c.ko} ${i+1}">
+    </div>`).join("");
+  const sheet=document.getElementById("browseSheet");
+  sheet.querySelector(".sheet-head").style.borderBottomColor=c.color;
+  sheet.classList.add("show");
+}
+function openFromBrowse(cat,file){
+  current={cat,file};
+  showCard(true);
+  addHistory(current);
+  document.getElementById("redrawBtn").dataset.scope=cat;
+}
+function closeBrowse(){document.getElementById("browseSheet").classList.remove("show");}
+
+/* ---------- library ---------- */
+let libTab="fav";
+function openLibrary(tab){switchLibTab(tab||"fav");document.getElementById("librarySheet").classList.add("show");}
+function closeLibrary(){document.getElementById("librarySheet").classList.remove("show");}
+function switchLibTab(tab){
+  libTab=tab;
+  document.getElementById("tabFav").classList.toggle("active",tab==="fav");
+  document.getElementById("tabHist").classList.toggle("active",tab==="hist");
+  renderLib();
+}
+function renderLib(){
+  const list=libTab==="fav"?favs:hist;
+  const grid=document.getElementById("libGrid");
+  const clearBtn=document.getElementById("clearBtn");
+  clearBtn.textContent=list.length?(libTab==="fav"?"즐겨찾기 비우기":"기록 지우기"):"";
+  if(!list.length){
+    grid.innerHTML=`<div class="empty" style="grid-column:1/-1">
+      <div class="big">${libTab==="fav"?"❤":"🕘"}</div>
+      ${libTab==="fav"?"아직 저장한 카드가 없어요.<br>카드를 뽑고 ♡ 저장을 눌러보세요.":"최근에 뽑은 카드가 없어요."}
+    </div>`;
+    return;
+  }
+  grid.innerHTML=list.map(item=>{
+    const c=CATS[item.cat];
+    return `<div class="thumb ${isFav(item.cat,item.file)?'faved':''}"
+      onclick="openFromBrowse('${item.cat}','${item.file.replace(/'/g,"\\'")}')">
+      <span class="num" style="background:${c.color}">${c.ko[0]}</span><span class="heart">❤</span>
+      <img src="${url(item.cat,item.file)}" loading="lazy" alt="${c.ko}">
+    </div>`;
+  }).join("");
+}
+function clearCurrentLib(){
+  if(libTab==="fav"){if(!confirm("즐겨찾기를 모두 지울까요?"))return;favs=[];save(LS_FAV,favs);updateFavBadge();}
+  else{if(!confirm("최근 기록을 모두 지울까요?"))return;hist=[];save(LS_HIST,hist);}
+  renderLib();
+}
+
+renderHome();
 </script>
+</body>
 </html>
