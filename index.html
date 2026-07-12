@@ -2,169 +2,133 @@
 <html lang="ko">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#f5f3ef">
 <title>라포카드 · 이야기를 여는 질문</title>
 <style>
 :root{
-  --bg:#f5f3ef;
-  --panel:#ffffff;
-  --ink:#2b2b2f;
-  --muted:#8a8a93;
-  --line:#eceae4;
-  --shadow:0 10px 30px rgba(30,25,20,.12);
-  --radius:20px;
+  --bg:#f5f3ef; --panel:#fff; --ink:#2b2b2f; --muted:#8a8a93; --line:#ececE4;
+  --radius:20px; --safe-b:env(safe-area-inset-bottom,0px);
 }
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
-html,body{margin:0;padding:0;}
+html,body{margin:0;padding:0;height:100%;}
 body{
   font-family:"Apple SD Gothic Neo","Malgun Gothic","Noto Sans KR",system-ui,-apple-system,sans-serif;
-  background:var(--bg);
-  color:var(--ink);
-  min-height:100vh;
-  -webkit-font-smoothing:antialiased;
+  background:var(--bg); color:var(--ink); -webkit-font-smoothing:antialiased;
+  overscroll-behavior-y:none;
 }
 button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit;}
-img{display:block;}
 
-/* ---------- Layout ---------- */
-.app{max-width:760px;margin:0 auto;padding:20px 18px 90px;}
-header.top{
-  display:flex;align-items:center;justify-content:space-between;
-  padding:6px 2px 18px;
-}
-.brand{display:flex;flex-direction:column;gap:2px;}
-.brand h1{font-size:24px;margin:0;letter-spacing:-.5px;font-weight:800;}
-.brand .tag{font-size:12.5px;color:var(--muted);letter-spacing:.2px;}
-.top-actions{display:flex;gap:8px;}
-.icon-btn{
-  width:44px;height:44px;border-radius:14px;background:var(--panel);
-  display:flex;align-items:center;justify-content:center;font-size:19px;
-  box-shadow:0 2px 8px rgba(30,25,20,.06);position:relative;transition:transform .12s;
-}
-.icon-btn:active{transform:scale(.92);}
-.icon-btn .badge{
-  position:absolute;top:-4px;right:-4px;background:#e85d5d;color:#fff;
-  font-size:10px;min-width:17px;height:17px;border-radius:9px;padding:0 4px;
-  display:flex;align-items:center;justify-content:center;font-weight:700;
-}
+.app{max-width:600px;margin:0 auto;padding:16px 16px calc(28px + var(--safe-b));}
+header.top{display:flex;align-items:center;justify-content:space-between;padding:8px 2px 14px;}
+.brand h1{font-size:22px;margin:0;font-weight:800;letter-spacing:-.5px;}
+.brand .tag{font-size:12px;color:var(--muted);margin-top:2px;}
+.icon-btn{width:44px;height:44px;border-radius:14px;background:var(--panel);
+  display:flex;align-items:center;justify-content:center;font-size:18px;
+  box-shadow:0 2px 8px rgba(30,25,20,.07);position:relative;transition:transform .12s;}
+.icon-btn:active{transform:scale(.9);}
+.icon-btn .badge{position:absolute;top:-5px;right:-5px;background:#e85d5d;color:#fff;
+  font-size:10px;min-width:18px;height:18px;border-radius:9px;padding:0 4px;font-weight:700;
+  display:flex;align-items:center;justify-content:center;}
 
-/* ---------- Hero draw ---------- */
-.hero{
-  background:linear-gradient(135deg,#2b2b2f,#44414b);
-  color:#fff;border-radius:var(--radius);padding:22px;margin-bottom:22px;
-  display:flex;align-items:center;justify-content:space-between;gap:16px;
-  box-shadow:var(--shadow);
-}
-.hero .txt h2{margin:0 0 4px;font-size:18px;font-weight:800;}
-.hero .txt p{margin:0;font-size:13px;color:#d8d5db;line-height:1.5;}
-.hero button{
-  background:#fff;color:#2b2b2f;font-weight:800;font-size:15px;
-  padding:14px 20px;border-radius:14px;white-space:nowrap;transition:transform .12s;
-}
-.hero button:active{transform:scale(.94);}
+.hero{border-radius:var(--radius);padding:20px;margin-bottom:18px;color:#fff;
+  background:linear-gradient(135deg,#2b2b2f,#454049);box-shadow:0 10px 26px rgba(30,25,20,.16);
+  display:flex;align-items:center;justify-content:space-between;gap:14px;}
+.hero h2{margin:0 0 3px;font-size:17px;font-weight:800;}
+.hero p{margin:0;font-size:12.5px;color:#d8d5db;line-height:1.5;}
+.hero button{background:#fff;color:#2b2b2f;font-weight:800;font-size:15px;padding:13px 22px;
+  border-radius:14px;white-space:nowrap;transition:transform .12s;}
+.hero button:active{transform:scale(.93);}
 
-/* ---------- Section ---------- */
-.section-title{
-  display:flex;align-items:baseline;justify-content:space-between;
-  margin:6px 4px 14px;
-}
-.section-title h3{margin:0;font-size:16px;font-weight:800;}
-.section-title span{font-size:12.5px;color:var(--muted);}
+.sec{display:flex;align-items:baseline;justify-content:space-between;margin:4px 4px 12px;}
+.sec h3{margin:0;font-size:15px;font-weight:800;}
+.sec span{font-size:12px;color:var(--muted);}
 
-/* ---------- Category grid ---------- */
-.cat-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;}
-@media(min-width:620px){.cat-grid{grid-template-columns:repeat(3,1fr);}}
-.cat{
-  background:var(--panel);border-radius:var(--radius);overflow:hidden;
-  box-shadow:0 4px 14px rgba(30,25,20,.07);transition:transform .14s, box-shadow .14s;
-  display:flex;flex-direction:column;
-}
-.cat:active{transform:scale(.97);}
-.cat .cover{position:relative;padding-top:132%;overflow:hidden;background:var(--line);}
-.cat .cover img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;}
-.cat .cover .count{
-  position:absolute;top:10px;right:10px;background:rgba(0,0,0,.35);color:#fff;
-  font-size:11px;font-weight:700;padding:3px 8px;border-radius:20px;backdrop-filter:blur(4px);
-}
-.cat .foot{display:flex;gap:8px;padding:10px;}
-.cat .foot button{
-  flex:1;border-radius:11px;padding:9px 0;font-size:13px;font-weight:800;transition:filter .12s,transform .1s;
-}
-.cat .foot button:active{transform:scale(.95);}
-.cat .foot .draw{color:#fff;}
-.cat .foot .browse{background:var(--line);color:#4b4b52;}
-.cat .foot .browse:active{filter:brightness(.96);}
+.cat-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;}
+.cat{border-radius:18px;overflow:hidden;box-shadow:0 5px 16px rgba(30,25,20,.10);
+  color:#fff;display:flex;flex-direction:column;min-height:150px;position:relative;}
+.cat .body{flex:1;padding:16px 16px 12px;display:flex;flex-direction:column;gap:6px;cursor:pointer;
+  transition:transform .12s;}
+.cat .body:active{transform:scale(.97);}
+.cat .icon{font-size:26px;line-height:1;}
+.cat .ko{font-size:22px;font-weight:800;letter-spacing:-.5px;}
+.cat .en{font-size:10px;letter-spacing:1.5px;opacity:.8;font-weight:700;}
+.cat .cnt{position:absolute;top:12px;right:12px;background:rgba(0,0,0,.22);font-size:11px;
+  font-weight:700;padding:3px 9px;border-radius:20px;}
+.cat .browse{border:none;background:rgba(255,255,255,.16);color:#fff;font-weight:800;
+  font-size:12.5px;padding:11px 0;transition:background .12s;}
+.cat .browse:active{background:rgba(255,255,255,.28);}
 
-/* ---------- Popup / Modal ---------- */
-.overlay{
-  position:fixed;inset:0;background:rgba(20,17,15,.62);backdrop-filter:blur(6px);
-  display:none;align-items:center;justify-content:center;z-index:50;padding:20px;
-  animation:fade .2s ease;
-}
+/* ---- card face (text) ---- */
+.card-face{background:#fff;border-radius:16px;position:relative;color:var(--ink);
+  display:flex;flex-direction:column;align-items:center;text-align:center;
+  padding:26px 20px 22px;box-shadow:inset 0 0 0 1px rgba(0,0,0,.04);}
+.card-face .cf-en{font-size:10px;letter-spacing:2px;font-weight:700;margin-bottom:2px;}
+.card-face .cf-ko{font-size:17px;font-weight:800;margin-bottom:auto;}
+.card-face .cf-q{font-weight:600;line-height:1.55;white-space:pre-line;
+  padding:22px 4px;flex:1;display:flex;align-items:center;justify-content:center;
+  word-break:keep-all;}
+.card-face .cf-line{width:62%;height:1px;background:#d9d6cf;margin:6px 0 12px;}
+.card-face .cf-brand{font-size:10px;color:#b7b3ab;letter-spacing:.3px;}
+
+/* ---- draw overlay (fullscreen on mobile) ---- */
+.overlay{position:fixed;inset:0;z-index:60;display:none;flex-direction:column;
+  align-items:center;justify-content:center;padding:20px;animation:fade .2s;}
 .overlay.show{display:flex;}
 @keyframes fade{from{opacity:0}to{opacity:1}}
-.modal{
-  width:100%;max-width:420px;display:flex;flex-direction:column;align-items:center;gap:16px;
-}
-.card-frame{
-  width:100%;max-width:340px;border-radius:22px;overflow:hidden;box-shadow:0 20px 50px rgba(0,0,0,.4);
-  background:#fff;position:relative;animation:pop .32s cubic-bezier(.2,.9,.3,1.2);
-}
-@keyframes pop{from{opacity:0;transform:translateY(14px) scale(.9)}to{opacity:1;transform:none}}
-.card-frame.flip{animation:flip .45s ease;}
-@keyframes flip{0%{transform:rotateY(90deg);opacity:.3}100%{transform:rotateY(0);opacity:1}}
-.card-frame img{width:100%;height:auto;}
-.card-meta{color:#fff;font-size:13px;font-weight:700;opacity:.9;letter-spacing:.3px;}
-.modal-actions{display:flex;gap:10px;width:100%;max-width:340px;}
-.modal-actions button{
-  flex:1;padding:14px 0;border-radius:14px;font-size:14px;font-weight:800;
-  background:rgba(255,255,255,.14);color:#fff;transition:transform .1s,background .12s;
-  display:flex;align-items:center;justify-content:center;gap:6px;
-}
+.draw-card{width:100%;max-width:360px;border-radius:26px;padding:16px;
+  box-shadow:0 24px 60px rgba(0,0,0,.4);animation:pop .34s cubic-bezier(.2,.9,.3,1.25);}
+.draw-card.flip{animation:flip .5s ease;}
+@keyframes pop{from{opacity:0;transform:translateY(16px) scale(.9)}to{opacity:1;transform:none}}
+@keyframes flip{0%{transform:perspective(900px) rotateY(88deg);opacity:.2}
+  100%{transform:perspective(900px) rotateY(0);opacity:1}}
+.draw-card .card-face{border-radius:16px;min-height:62vh;}
+.draw-card .cf-q{font-size:clamp(21px,6vw,27px);}
+.modal-actions{display:flex;gap:10px;width:100%;max-width:360px;margin-top:16px;}
+.modal-actions button{flex:1;padding:15px 0;border-radius:15px;font-size:14px;font-weight:800;
+  background:rgba(255,255,255,.16);color:#fff;transition:transform .1s,background .12s;
+  display:flex;align-items:center;justify-content:center;gap:5px;}
 .modal-actions button:active{transform:scale(.94);}
-.modal-actions button.primary{background:#fff;color:#2b2b2f;}
-.modal-actions button.fav.on{background:#e85d5d;color:#fff;}
-.close-hint{color:rgba(255,255,255,.55);font-size:12px;}
+.modal-actions .primary{background:#fff;color:#2b2b2f;}
+.modal-actions .fav.on{background:#fff;color:#e85d5d;}
+.close-x{position:absolute;top:calc(14px + var(--safe-b));right:16px;color:rgba(255,255,255,.85);
+  font-size:26px;width:42px;height:42px;border-radius:50%;background:rgba(0,0,0,.18);
+  display:flex;align-items:center;justify-content:center;z-index:2;}
 
-/* ---------- Browse sheet ---------- */
-.sheet{
-  position:fixed;inset:0;z-index:40;background:var(--bg);display:none;flex-direction:column;
-  animation:slideUp .28s ease;
-}
+/* ---- sheets (browse / library) ---- */
+.sheet{position:fixed;inset:0;z-index:50;background:var(--bg);display:none;flex-direction:column;
+  animation:slideUp .28s ease;}
 .sheet.show{display:flex;}
 @keyframes slideUp{from{transform:translateY(24px);opacity:0}to{transform:none;opacity:1}}
-.sheet-head{
-  display:flex;align-items:center;gap:12px;padding:16px 18px;border-bottom:1px solid var(--line);
-  background:var(--panel);
-}
-.sheet-head .back{font-size:20px;width:40px;height:40px;border-radius:12px;background:var(--line);
+.sheet-head{display:flex;align-items:center;gap:12px;padding:calc(14px + env(safe-area-inset-top,0px)) 16px 14px;
+  background:var(--panel);border-bottom:3px solid var(--line);}
+.sheet-head .back{font-size:22px;width:40px;height:40px;border-radius:12px;background:var(--line);
   display:flex;align-items:center;justify-content:center;}
-.sheet-head .stitle{font-size:17px;font-weight:800;}
-.sheet-head .stitle small{display:block;font-size:12px;font-weight:600;color:var(--muted);}
-.sheet-body{overflow-y:auto;padding:18px;flex:1;}
-.browse-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;max-width:760px;margin:0 auto;}
-@media(min-width:520px){.browse-grid{grid-template-columns:repeat(3,1fr);}}
-.thumb{border-radius:14px;overflow:hidden;box-shadow:0 3px 10px rgba(30,25,20,.08);
-  background:#fff;transition:transform .12s;position:relative;}
-.thumb:active{transform:scale(.96);}
-.thumb img{width:100%;height:auto;}
-.thumb .num{position:absolute;top:7px;left:7px;background:rgba(0,0,0,.4);color:#fff;
-  font-size:10px;font-weight:700;width:22px;height:22px;border-radius:11px;display:flex;
-  align-items:center;justify-content:center;}
-.thumb .heart{position:absolute;top:7px;right:7px;font-size:14px;opacity:0;transition:opacity .15s;}
-.thumb.faved .heart{opacity:1;}
+.sheet-head .stitle{font-size:16px;font-weight:800;line-height:1.2;}
+.sheet-head .stitle small{display:block;font-size:11.5px;font-weight:600;color:var(--muted);margin-top:2px;}
+.sheet-body{overflow-y:auto;-webkit-overflow-scrolling:touch;padding:16px;flex:1;}
+.browse-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;max-width:600px;margin:0 auto;}
+.mini{border-radius:14px;padding:8px;position:relative;color:#fff;transition:transform .12s;}
+.mini:active{transform:scale(.96);}
+.mini .mini-face{background:#fff;border-radius:9px;color:var(--ink);min-height:150px;
+  padding:14px 10px;display:flex;flex-direction:column;text-align:center;}
+.mini .mini-en{font-size:8px;letter-spacing:1.5px;font-weight:700;}
+.mini .mini-ko{font-size:12px;font-weight:800;margin-bottom:6px;}
+.mini .mini-q{font-size:12.5px;font-weight:600;line-height:1.45;flex:1;
+  display:flex;align-items:center;justify-content:center;word-break:keep-all;white-space:pre-line;}
+.mini .num{position:absolute;top:14px;left:14px;font-size:9px;font-weight:800;
+  background:rgba(0,0,0,.28);padding:2px 6px;border-radius:8px;}
+.mini .heart{position:absolute;top:12px;right:12px;font-size:14px;opacity:0;}
+.mini.faved .heart{opacity:1;}
 
-/* ---------- Library (favorites/history) ---------- */
-.lib-tabs{display:flex;gap:8px;padding:14px 18px 0;background:var(--panel);}
-.lib-tabs button{
-  flex:1;padding:11px 0;border-radius:12px;font-weight:800;font-size:14px;
-  background:var(--line);color:var(--muted);
-}
+.lib-tabs{display:flex;gap:8px;padding:12px 16px 0;background:var(--panel);}
+.lib-tabs button{flex:1;padding:11px 0;border-radius:12px;font-weight:800;font-size:13.5px;
+  background:var(--line);color:var(--muted);}
 .lib-tabs button.active{background:#2b2b2f;color:#fff;}
-.empty{text-align:center;color:var(--muted);padding:60px 20px;font-size:14px;line-height:1.6;}
-.empty .big{font-size:40px;margin-bottom:10px;}
-.lib-actions{display:flex;justify-content:flex-end;padding:0 18px;max-width:760px;margin:12px auto 0;}
-.lib-actions button{font-size:12.5px;color:var(--muted);text-decoration:underline;}
+.lib-actions{display:flex;justify-content:flex-end;padding:10px 16px 0;max-width:600px;margin:0 auto;}
+.lib-actions button{font-size:12px;color:var(--muted);text-decoration:underline;}
+.empty{text-align:center;color:var(--muted);padding:56px 20px;font-size:14px;line-height:1.6;}
+.empty .big{font-size:38px;margin-bottom:8px;}
 </style>
 </head>
 <body>
@@ -172,53 +136,43 @@ header.top{
   <header class="top">
     <div class="brand">
       <h1>라포카드</h1>
-      <span class="tag">한 장을 뽑아, 이야기를 열어요</span>
+      <div class="tag">한 장을 뽑아, 이야기를 열어요</div>
     </div>
-    <div class="top-actions">
-      <button class="icon-btn" onclick="openLibrary('fav')" title="즐겨찾기·기록">
-        <span>❤</span><span class="badge" id="favBadge" style="display:none">0</span>
-      </button>
-    </div>
+    <button class="icon-btn" onclick="openLibrary('fav')" aria-label="보관함">
+      <span>❤</span><span class="badge" id="favBadge" style="display:none">0</span>
+    </button>
   </header>
 
   <div class="hero">
-    <div class="txt">
+    <div>
       <h2>🎲 전체 랜덤 뽑기</h2>
-      <p>모든 카테고리를 섞어<br>한 장을 뽑습니다</p>
+      <p>모든 카테고리를 섞어<br>질문 한 장을 뽑아요</p>
     </div>
     <button onclick="drawRandom(null)">뽑기</button>
   </div>
 
-  <div class="section-title">
-    <h3>카테고리</h3>
-    <span id="totalCount"></span>
-  </div>
+  <div class="sec"><h3>카테고리</h3><span id="totalCount"></span></div>
   <div class="cat-grid" id="catGrid"></div>
 </div>
 
-<!-- Draw popup -->
+<!-- Draw overlay -->
 <div class="overlay" id="overlay">
-  <div class="modal">
-    <div class="card-frame" id="cardFrame"><img id="cardImg" src="" alt="질문 카드"></div>
-    <div class="card-meta" id="cardCat"></div>
-    <div class="modal-actions">
-      <button class="fav" id="favBtn" onclick="toggleFav()">♡ 저장</button>
-      <button class="primary" id="redrawBtn" onclick="redraw()">🔄 다시 뽑기</button>
-      <button onclick="closeOverlay()">닫기</button>
-    </div>
-    <div class="close-hint">바깥을 눌러도 닫혀요</div>
+  <div class="close-x" onclick="closeOverlay()">×</div>
+  <div class="draw-card" id="drawCard"></div>
+  <div class="modal-actions">
+    <button class="fav" id="favBtn" onclick="toggleFav()">♡ 저장</button>
+    <button class="primary" id="redrawBtn" onclick="redraw()">🔄 다시</button>
+    <button onclick="closeOverlay()">닫기</button>
   </div>
 </div>
 
 <!-- Browse sheet -->
 <div class="sheet" id="browseSheet">
-  <div class="sheet-head">
+  <div class="sheet-head" id="browseHead">
     <button class="back" onclick="closeBrowse()">‹</button>
     <div class="stitle" id="browseTitle">탐색<small id="browseSub"></small></div>
   </div>
-  <div class="sheet-body">
-    <div class="browse-grid" id="browseGrid"></div>
-  </div>
+  <div class="sheet-body"><div class="browse-grid" id="browseGrid"></div></div>
 </div>
 
 <!-- Library sheet -->
@@ -232,174 +186,293 @@ header.top{
     <button id="tabHist" onclick="switchLibTab('hist')">🕘 최근 기록</button>
   </div>
   <div class="lib-actions"><button id="clearBtn" onclick="clearCurrentLib()"></button></div>
-  <div class="sheet-body">
-    <div class="browse-grid" id="libGrid"></div>
-  </div>
+  <div class="sheet-body"><div class="browse-grid" id="libGrid"></div></div>
 </div>
 
 <script>
-const assetsDir = "images/lafocard";
 const CATS = {
-  character:   {ko:"개성",   sub:"Character",    color:"#9285c9", cover:"character (0).jpg"},
-  if:          {ko:"만약에",  sub:"If",            color:"#e8871e", cover:"if (0).jpg"},
-  life:        {ko:"인생",   sub:"Life",          color:"#4fbf98", cover:"life (0).jpg"},
-  potentiality:{ko:"잠재력",  sub:"Potentiality", color:"#2e5a82", cover:"potentiality (1).jpeg", coverAlt:"potentiality (0).jpg"},
-  relationship:{ko:"관계",   sub:"Relationship", color:"#e85d5d", cover:"relationship (1).JPG"}
+  character:   {ko:"개성",   en:"CHARACTER",    color:"#9285c9", icon:"🙋"},
+  if:          {ko:"만약에",  en:"IF",           color:"#e8871e", icon:"❓"},
+  life:        {ko:"인생",   en:"LIFE",         color:"#4fbf98", icon:"🧭"},
+  potentiality:{ko:"잠재력",  en:"POTENTIALITY", color:"#2e5a82", icon:"💡"},
+  relationship:{ko:"관계",   en:"RELATIONSHIP", color:"#e85d5d", icon:"🤝"}
 };
-const DECK = {
-  "character":["character (1).jpg","character (2).jpg","character (3).jpg","character (4).jpg","character (5).jpg","character (6).jpg","character (7).jpg","character (8).jpg","character (9).jpg","character (10).jpg","character (11).jpg","character (12).jpg","character (13).jpg","character (14).jpg","character (15).jpg","character (16).jpg","character (17).jpg","character (18).jpg","character (19).jpg","character (20).jpg","character (21).jpg","character (22).jpg","character (23).jpg","character (24).jpg","character (25).jpg","character (26).jpg","character (27).jpg","character (28).jpg","character (29).jpg","character (30).jpg","character (31).jpg","character (32).jpg","character (33).jpg","character (34).jpg","character (35).jpg","character (36).jpg","character (37).jpg","character (38).jpg"],
-  "if":["if (1).jpg","if (2).jpg","if (3).jpg","if (4).jpg","if (5).jpg","if (6).jpg","if (7).jpg","if (8).jpg","if (9).jpg","if (10).jpg","if (11).jpg","if (12).jpg","if (13).jpg","if (14).jpg","if (15).jpg","if (16).jpg","if (17).jpg","if (18).jpg","if (19).jpg","if (20).jpg","if (21).jpg","if (22).jpg","if (23).jpg","if (24).jpg","if (25).jpg","if (26).jpg","if (27).jpg","if (28).jpg","if (29).jpg","if (30).jpg"],
-  "life":["life (1).jpg","life (2).jpg","life (3).jpg","life (4).jpeg","life (5).jpg","life (6).jpg","life (7).jpg","life (8).jpg","life (9).jpg","life (10).jpg","life (11).jpg","life (12).jpg","life (13).jpg","life (14).jpg","life (15).jpg","life (16).jpg","life (17).jpg","life (18).jpg","life (19).jpg","life (20).jpg","life (21).jpg","life (22).jpg","life (23).jpg","life (24).jpg","life (25).jpg","life (26).jpg","life (27).jpg"],
-  "potentiality":["potentiality (1).jpeg","potentiality (2).jpg","potentiality (3).jpg","potentiality (4).jpg","potentiality (5).jpg","potentiality (6).jpg","potentiality (7).jpg","potentiality (8).jpg","potentiality (9).jpg","potentiality (10).jpg","potentiality (11).jpg","potentiality (12).jpg","potentiality (13).jpg","potentiality (14).jpg","potentiality (15).jpg","potentiality (16).jpg","potentiality (17).jpg","potentiality (18).jpg","potentiality (19).jpg","potentiality (20).jpg","potentiality (21).jpg","potentiality (22).jpg"],
-  "relationship":["relationship (2).JPG","relationship (3).JPG","relationship (4).JPG","relationship (5).JPG","relationship (6).JPG","relationship (7).JPG","relationship (8).JPG","relationship (9).JPG","relationship (10).JPG","relationship (11).JPG","relationship (12).JPG","relationship (13).JPG","relationship (14).JPG","relationship (15).JPG","relationship (16).JPG","relationship (17).JPG","relationship (18).JPG","relationship (19).JPG","relationship (20).JPG"]
+const Q = {
+  character:[
+    "지금 내가 가장 갖고 싶은 것은",
+    "자신에게 주고 싶은 최고의 선물은 무엇인가요?",
+    "좋아하는 활동 3가지",
+    "하고 싶은 취미는?",
+    "좋아하는 분야는\n(경제, 연예, 스포츠, 쇼핑, 게임, 문화 등)",
+    "좋아하는 외국음식이 있다면?",
+    "외국 사람에게 대한민국의 단 한 곳과 한 가지 음식을 추천한다면?",
+    "마스터 하고 싶은 외국어는?",
+    "외국인과 친구가 되면 하고 싶은 것은?",
+    "내가 살고 싶은 집은",
+    "당신은 주로 무엇에 감동하나요?",
+    "추천음악은?",
+    "어떤 음악, 어떤 노래를 들을 때 신나서 흥이 나나요? 그 곡의 제목은 무엇인가요?",
+    "추천영화는",
+    "추천도서는",
+    "가장 행복할 때는",
+    "하루 중 내가 좋아하는 시간은",
+    "에너지를 충전하는 나만의 방법은?",
+    "내가 생각하는 행복이란?",
+    "내가 상상하는 천국은?",
+    "내 인생의 중요 키워드 3가지는",
+    "삶이 당신에게 가르쳐준 최고의 지혜는 무엇인가요?",
+    "나를 열 글자로 표현한다면",
+    "내가 나를 좋아하는 3가지 이유는",
+    "나의 좋은 습관은",
+    "갖고 싶은 습관은?",
+    "멘토로 삼고 싶은 인물은?",
+    "나의 별명은",
+    "좋은 첫인상을 위한 나만의 비법은?",
+    "내적이나 외적으로 이것만 바꾸면 완벽해질 당신, 이것은 무엇인가요?",
+    "사람들은 모르지만 알리고 싶은 당신의 모습이 있다면",
+    "가장 싫어하는 사람의 마음을 얻어야 한다면 당신의 전략은?",
+    "정의가 이루어졌으면 하는 것은",
+    "인류의 평화를 위한 나만의 아이디어는",
+    "나는 체계성 vs 유연성",
+    "나는 이성적 vs 감성적",
+    "다른 사람이 나의 마음을 얻기 위한 전략은?",
+    "가장 가보고 싶은 나라는?"
+  ],
+  if:[
+    "신과 같은 능력을 갖는다면 어떤 능력인가요?",
+    "내가 신이라면 어떤 사람의 소원을 들어주고 싶나요?",
+    "단 하루 신이 된다면",
+    "신에게 묻고 싶은 질문은",
+    "대통령 선거에 나가기 위한 당신의 핵심 공약 3가지는",
+    "다음 생에 태어나고 싶은 인물은",
+    "지금 당장 10년이 젊어진다면?",
+    "나의 수명만큼 상대를 살릴 수 있다면",
+    "다시 태어나면\n남자 / 여자 로\n태어나고 싶다",
+    "무인도에 간다면 가지고 갈 3가지는?",
+    "영화나 드라마에서 되고 싶은 주인공은?",
+    "나를 광고하기 위한 광고모델로 누구를 발탁하고 싶나요",
+    "내일 기적이 일어난다면 무엇을 보고 알 수 있을까요",
+    "단 한발의 큐피트의 화살이 있다면 누구에게 사용하고 싶나요?",
+    "평화를 위해 세상의 “이것” 하나를 없앨 수 있다면",
+    "누구와도 단 하루의 데이트를 할 수 있다면 누구와 하고 싶나요",
+    "내일 지구가 멸망한다면?",
+    "TED에서 강의 의뢰가 온다면 주제는?",
+    "마이 리틀 텔레비전\n(인터넷 개인 방송)\n3시간 생방송에 출연한다면 주제는?",
+    "로또에 당첨된다면",
+    "1000억을 하루에 써야 한다면",
+    "되고 싶은 히어로는",
+    "당신과의 식사 경매가 10억에 낙찰되었습니다. 낙찰자에게 어떤 이야기를 해줄 건가요?",
+    "나와 100% 똑같은 성격의 사람을 만났습니다. 그 사람을 보면 어떻게 느껴지나요?",
+    "하기 싫은 일 월급 500만원\nvs\n하고 싶은 일 월급 200만원\n\n당신의 선택은?",
+    "1000억으로 10년 살기\nvs\n지금과 같이 30년 살기",
+    "램프의 요정에게 말할 소원 3가지는?",
+    "타임머신을 탄다면 언제, 어디로 가고 싶나요?",
+    "나를 경매로 내놓는다면 얼마에 낙찰될까요?",
+    "기부한다면 어떤 단체에 어떤 방법으로 하고 싶나요?"
+  ],
+  life:[
+    "태어나서 기억하는 첫 번째 장면은?",
+    "학창시절 가장 열정을 쏟은 일은",
+    "가장 용기 있게 했던 일은?",
+    "내 인생 최고의 순간은",
+    "내 인생 최고의 성과는",
+    "내 인생 최고의 선택은",
+    "나에게 했던 가장 큰 호사는",
+    "경험 중 최고의 여행지는",
+    "나의 전성기는 언제인가요",
+    "살면서 가장 실행력이 높았던 때는, 언제 무엇을 할 때였나요?",
+    "현재의 내가 과거의 중대한 사건으로 가서 나에게 조언을 한다면?",
+    "내 인생에 힘이 되어 준 한마디는",
+    "삶에서 기적과도 같은 일이 있다고 생각되는 것은?",
+    "내 인생의 전환점이 되었던 날은",
+    "내 인생이 영화로 상영되었습니다. 가장 많은 박수를 받은 장면은 무엇인가요?",
+    "내 인생이 영화로 상영되었습니다. 마지막 장면은 무엇인가요?",
+    "내 미래에서 가장 궁금한 것은?",
+    "10년 후 당신의 이름 앞에 수식어를 붙인다면 어떤 말을 쓰고 싶나요?",
+    "먼 훗날 당신의 장례식에서 사람들에게 듣고 싶은 말은?",
+    "생을 다하고 신에게 갔을 때 신은 당신에게 어떤 말을 할까요?",
+    "나의 로망은?",
+    "나만의 버킷리스트 3가지는",
+    "지금 하지 않는다면 가장 후회할 것 같은 일이 있다면 무엇인가요?",
+    "치매가 와도 꼭 기억하고 싶은 한 가지는",
+    "죽음의 고비에서 다시 태어난 당신, 어떤 인생을 살고 싶나요?",
+    "지금이 영계로 가기 직전이라면, 마지막으로 남기고 싶은 말",
+    "가장 감동받았을 때는?"
+  ],
+  potentiality:[
+    "나의 경쟁력은",
+    "나의 재능은",
+    "당신이 가진 여러 능력 중 3가지는?",
+    "1인자가 되고 싶은 분야는?",
+    "가장 자신 있는 것은",
+    "어떤 재능을 갖고 싶나요?",
+    "발휘하고 싶은 강점은",
+    "계발하고 싶은 성격성향은?",
+    "당신이 온전히 집중하고 싶은 것은 무엇인가요?",
+    "돈을 벌지 못해도 꼭 해보고 싶은 것은",
+    "어렸을 적 가장 배우고 싶었던 것은",
+    "무언가 더 배우고 싶은 것이 있다면 무엇인가요?",
+    "진짜 경험하고 싶은 것은",
+    "아직 누구에게도 말하지 않은 꿈이나 희망이 있다면",
+    "과거로 돌아가 진로 선택을 한다면?",
+    "모든 일을 할 수 있다면 망설임 없이 선택하고 싶은 일이나 직업은 무엇인가요?",
+    "지금 하고 있는 일을 좋아하는 이유는",
+    "내가 성공했다는 것을 무엇으로 알 수 있을까요?",
+    "나의 성취 또는 성공의 비결은",
+    "만약 태어나기 전, 당신이 환경을 선택할 수 있다면",
+    "나의 사명을 알기 위해 어떤 환경에서 태어나야 할까요?",
+    "어떤 능력이 있으면 내가 원하는 것을 얻을 수 있나요?"
+  ],
+  relationship:[
+    "부모님에게 했던 가장 큰 효도는",
+    "부모님께 이것을 못해 드리면 가장 후회스러울 것은?",
+    "부모님께 했던 가장 큰 애교는",
+    "부모님이 당신의 자녀로 태어난다면",
+    "삼고 싶은 가훈은?",
+    "자녀에게 전해주고 싶은 가치는",
+    "자손에게 물려주고 싶은 인생의 교훈은?",
+    "미래의 손자, 손녀에게 물려주고 싶은 것은",
+    "내 인생의 은인은",
+    "감사를 전하고픈 인물은",
+    "악기나 작곡을 해서 꼭 들려주고 싶은 사람과 그 이유는?",
+    "내가 생각하는 최고의 프로포즈는",
+    "하고 싶은 결혼식은\n(기혼자는 리마인드 결혼식)",
+    "이상적인 배우자는?",
+    "배우자를 선택할 때 고려하는 사항은?",
+    "사랑하는 사람에게 해주고 싶은 요리",
+    "미래의 배우자를 위해 해주고 싶은 것, 혹은 준비하고 싶은 것은?",
+    "배우자와 꼭 함께하고 싶은 것은",
+    "이루고 싶은 가정의 이미지"
+  ]
 };
 
-/* ---------- storage ---------- */
-const LS_FAV="lafocard_fav", LS_HIST="lafocard_hist";
+/* storage */
+const LS_FAV="lafocard_fav_v2", LS_HIST="lafocard_hist_v2";
 function load(k){try{return JSON.parse(localStorage.getItem(k))||[]}catch(e){return[]}}
 function save(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}
 let favs=load(LS_FAV), hist=load(LS_HIST);
-function cardId(cat,file){return cat+"/"+file;}
-function isFav(cat,file){return favs.some(f=>f.id===cardId(cat,file));}
-function url(cat,file){return encodeURI(assetsDir+"/"+cat+"/"+file);}
+const cid=(c,i)=>c+"#"+i;
+const isFav=(c,i)=>favs.some(f=>f.id===cid(c,i));
 
-/* ---------- render home ---------- */
+/* card face html */
+function faceHTML(cat,i,cls){
+  const c=CATS[cat];
+  return `<div class="card-face" style="background:#fff">
+    <div class="cf-en" style="color:${c.color}">${c.en}</div>
+    <div class="cf-ko" style="color:${c.color}">${c.ko}</div>
+    <div class="cf-q">${Q[cat][i]}</div>
+    <div class="cf-line"></div>
+    <div class="cf-brand">더불어 성장하는 이타주의자들</div>
+  </div>`;
+}
+
+/* home */
 function renderHome(){
-  const grid=document.getElementById("catGrid");
   let total=0;
-  grid.innerHTML=Object.entries(CATS).map(([key,c])=>{
-    const n=DECK[key].length; total+=n;
-    return `<div class="cat">
-      <div class="cover">
-        <img src="${url(key,c.cover)}" alt="${c.ko}" loading="lazy"
-             onerror="this.onerror=null;this.src='${c.coverAlt?url(key,c.coverAlt):''}'">
-        <span class="count">${n}장</span>
+  document.getElementById("catGrid").innerHTML=Object.entries(CATS).map(([k,c])=>{
+    const n=Q[k].length; total+=n;
+    return `<div class="cat" style="background:${c.color}">
+      <span class="cnt">${n}장</span>
+      <div class="body" onclick="drawRandom('${k}')">
+        <span class="icon">${c.icon}</span>
+        <span class="ko">${c.ko}</span>
+        <span class="en">${c.en}</span>
+        <span style="font-size:11px;opacity:.85;margin-top:2px">눌러서 뽑기</span>
       </div>
-      <div class="foot">
-        <button class="draw" style="background:${c.color}" onclick="drawRandom('${key}')">뽑기</button>
-        <button class="browse" onclick="openBrowse('${key}')">탐색</button>
-      </div>
+      <button class="browse" onclick="openBrowse('${k}')">📖 질문 탐색</button>
     </div>`;
   }).join("");
   document.getElementById("totalCount").textContent="총 "+total+"장";
-  updateFavBadge();
+  updateBadge();
 }
-function updateFavBadge(){
+function updateBadge(){
   const b=document.getElementById("favBadge");
-  if(favs.length){b.style.display="flex";b.textContent=favs.length;}
-  else b.style.display="none";
+  if(favs.length){b.style.display="flex";b.textContent=favs.length;}else b.style.display="none";
 }
 
-/* ---------- draw ---------- */
-let current=null; // {cat,file}
+/* draw */
+let current=null;
 function pick(cat){
-  const key=cat||Object.keys(DECK)[Math.floor(Math.random()*5)];
-  const deck=DECK[key];
-  const file=deck[Math.floor(Math.random()*deck.length)];
-  return {cat:key,file};
+  const key=cat||Object.keys(Q)[Math.floor(Math.random()*5)];
+  return {cat:key,i:Math.floor(Math.random()*Q[key].length)};
 }
-function drawRandom(cat){
-  current=pick(cat);
-  showCard(true);
-  addHistory(current);
-  document.getElementById("redrawBtn").dataset.scope=cat||"";
-}
-function redraw(){
-  const scope=document.getElementById("redrawBtn").dataset.scope;
-  current=pick(scope||null);
-  showCard(true);
-  addHistory(current);
-}
+function drawRandom(cat){ current=pick(cat); document.getElementById("redrawBtn").dataset.scope=cat||""; showCard(true); addHist(current);}
+function redraw(){ const s=document.getElementById("redrawBtn").dataset.scope; current=pick(s||null); showCard(true); addHist(current);}
 function showCard(flip){
-  const {cat,file}=current;
-  const img=document.getElementById("cardImg");
-  const frame=document.getElementById("cardFrame");
-  img.src=url(cat,file);
-  document.getElementById("cardCat").textContent=CATS[cat].ko+" · "+CATS[cat].sub;
-  const favBtn=document.getElementById("favBtn");
-  if(isFav(cat,file)){favBtn.classList.add("on");favBtn.innerHTML="❤ 저장됨";}
-  else{favBtn.classList.remove("on");favBtn.innerHTML="♡ 저장";}
-  document.getElementById("overlay").classList.add("show");
-  if(flip){frame.classList.remove("flip");void frame.offsetWidth;frame.classList.add("flip");}
+  const {cat,i}=current, c=CATS[cat];
+  const ov=document.getElementById("overlay");
+  ov.style.background=c.color+"f2";
+  const card=document.getElementById("drawCard");
+  card.style.background=c.color;
+  card.innerHTML=faceHTML(cat,i);
+  const fav=document.getElementById("favBtn");
+  if(isFav(cat,i)){fav.classList.add("on");fav.innerHTML="❤ 저장됨";}
+  else{fav.classList.remove("on");fav.innerHTML="♡ 저장";}
+  ov.classList.add("show");
+  if(flip){card.classList.remove("flip");void card.offsetWidth;card.classList.add("flip");}
 }
 function closeOverlay(){document.getElementById("overlay").classList.remove("show");}
-document.getElementById("overlay").addEventListener("click",e=>{
-  if(e.target.id==="overlay")closeOverlay();
-});
 
-/* ---------- favorites ---------- */
+/* fav / hist */
 function toggleFav(){
-  const {cat,file}=current, id=cardId(cat,file);
-  if(isFav(cat,file)){favs=favs.filter(f=>f.id!==id);}
-  else{favs.unshift({id,cat,file,ts:Date.now()});}
-  save(LS_FAV,favs);
-  showCard(false);
-  updateFavBadge();
+  const {cat,i}=current, id=cid(cat,i);
+  if(isFav(cat,i))favs=favs.filter(f=>f.id!==id);
+  else favs.unshift({id,cat,i,ts:Date.now()});
+  save(LS_FAV,favs); showCard(false); updateBadge();
 }
-function addHistory(c){
-  const id=cardId(c.cat,c.file);
-  hist=hist.filter(h=>h.id!==id);
-  hist.unshift({id,cat:c.cat,file:c.file,ts:Date.now()});
-  if(hist.length>60)hist=hist.slice(0,60);
-  save(LS_HIST,hist);
+function addHist(x){
+  const id=cid(x.cat,x.i);
+  hist=hist.filter(h=>h.id!==id); hist.unshift({id,cat:x.cat,i:x.i,ts:Date.now()});
+  if(hist.length>80)hist=hist.slice(0,80); save(LS_HIST,hist);
 }
 
-/* ---------- browse ---------- */
+/* browse */
 function openBrowse(cat){
   const c=CATS[cat];
   document.getElementById("browseTitle").firstChild.textContent=c.ko+" ";
-  document.getElementById("browseSub").textContent=c.sub+" · "+DECK[cat].length+"개의 질문";
-  const grid=document.getElementById("browseGrid");
-  grid.innerHTML=DECK[cat].map((file,i)=>`
-    <div class="thumb ${isFav(cat,file)?'faved':''}" onclick="openFromBrowse('${cat}','${file.replace(/'/g,"\\'")}')">
-      <span class="num">${i+1}</span><span class="heart">❤</span>
-      <img src="${url(cat,file)}" loading="lazy" alt="${c.ko} ${i+1}">
-    </div>`).join("");
-  const sheet=document.getElementById("browseSheet");
-  sheet.querySelector(".sheet-head").style.borderBottomColor=c.color;
-  sheet.classList.add("show");
+  document.getElementById("browseSub").textContent=c.en+" · "+Q[cat].length+"개의 질문";
+  document.getElementById("browseHead").style.borderBottomColor=c.color;
+  document.getElementById("browseGrid").innerHTML=Q[cat].map((q,i)=>miniHTML(cat,i)).join("");
+  document.getElementById("browseSheet").classList.add("show");
 }
-function openFromBrowse(cat,file){
-  current={cat,file};
-  showCard(true);
-  addHistory(current);
-  document.getElementById("redrawBtn").dataset.scope=cat;
+function miniHTML(cat,i){
+  const c=CATS[cat];
+  return `<div class="mini ${isFav(cat,i)?'faved':''}" style="background:${c.color}" onclick="openFromList('${cat}',${i})">
+    <span class="num">${i+1}</span><span class="heart">❤</span>
+    <div class="mini-face">
+      <div class="mini-en" style="color:${c.color}">${c.en}</div>
+      <div class="mini-ko" style="color:${c.color}">${c.ko}</div>
+      <div class="mini-q">${Q[cat][i]}</div>
+    </div>
+  </div>`;
 }
+function openFromList(cat,i){ current={cat,i}; document.getElementById("redrawBtn").dataset.scope=cat; showCard(true); addHist(current);}
 function closeBrowse(){document.getElementById("browseSheet").classList.remove("show");}
 
-/* ---------- library ---------- */
+/* library */
 let libTab="fav";
-function openLibrary(tab){switchLibTab(tab||"fav");document.getElementById("librarySheet").classList.add("show");}
+function openLibrary(t){switchLibTab(t||"fav");document.getElementById("librarySheet").classList.add("show");}
 function closeLibrary(){document.getElementById("librarySheet").classList.remove("show");}
-function switchLibTab(tab){
-  libTab=tab;
-  document.getElementById("tabFav").classList.toggle("active",tab==="fav");
-  document.getElementById("tabHist").classList.toggle("active",tab==="hist");
+function switchLibTab(t){
+  libTab=t;
+  document.getElementById("tabFav").classList.toggle("active",t==="fav");
+  document.getElementById("tabHist").classList.toggle("active",t==="hist");
   renderLib();
 }
 function renderLib(){
   const list=libTab==="fav"?favs:hist;
   const grid=document.getElementById("libGrid");
-  const clearBtn=document.getElementById("clearBtn");
-  clearBtn.textContent=list.length?(libTab==="fav"?"즐겨찾기 비우기":"기록 지우기"):"";
+  document.getElementById("clearBtn").textContent=list.length?(libTab==="fav"?"즐겨찾기 비우기":"기록 지우기"):"";
   if(!list.length){
     grid.innerHTML=`<div class="empty" style="grid-column:1/-1">
       <div class="big">${libTab==="fav"?"❤":"🕘"}</div>
-      ${libTab==="fav"?"아직 저장한 카드가 없어요.<br>카드를 뽑고 ♡ 저장을 눌러보세요.":"최근에 뽑은 카드가 없어요."}
-    </div>`;
+      ${libTab==="fav"?"아직 저장한 카드가 없어요.<br>카드를 뽑고 ♡ 저장을 눌러보세요.":"최근에 뽑은 카드가 없어요."}</div>`;
     return;
   }
-  grid.innerHTML=list.map(item=>{
-    const c=CATS[item.cat];
-    return `<div class="thumb ${isFav(item.cat,item.file)?'faved':''}"
-      onclick="openFromBrowse('${item.cat}','${item.file.replace(/'/g,"\\'")}')">
-      <span class="num" style="background:${c.color}">${c.ko[0]}</span><span class="heart">❤</span>
-      <img src="${url(item.cat,item.file)}" loading="lazy" alt="${c.ko}">
-    </div>`;
-  }).join("");
+  grid.innerHTML=list.map(it=>miniHTML(it.cat,it.i)).join("");
 }
 function clearCurrentLib(){
-  if(libTab==="fav"){if(!confirm("즐겨찾기를 모두 지울까요?"))return;favs=[];save(LS_FAV,favs);updateFavBadge();}
+  if(libTab==="fav"){if(!confirm("즐겨찾기를 모두 지울까요?"))return;favs=[];save(LS_FAV,favs);updateBadge();}
   else{if(!confirm("최근 기록을 모두 지울까요?"))return;hist=[];save(LS_HIST,hist);}
   renderLib();
 }
