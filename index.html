@@ -50,13 +50,16 @@ header.top{display:flex;align-items:center;justify-content:space-between;padding
 .cat .body{flex:1;padding:16px 16px 12px;display:flex;flex-direction:column;gap:6px;cursor:pointer;
   transition:transform .12s;}
 .cat .body:active{transform:scale(.97);}
-.cat .icon{font-size:26px;line-height:1;}
+.cat .icon{line-height:0;color:#fff;}
+.ico{display:inline-block;vertical-align:-.16em;}
+.hero h2{display:flex;align-items:center;gap:8px;}
 .cat .ko{font-size:22px;font-weight:800;letter-spacing:-.5px;}
 .cat .en{font-size:10px;letter-spacing:1.5px;opacity:.8;font-weight:700;}
 .cat .cnt{position:absolute;top:12px;right:12px;background:rgba(0,0,0,.22);font-size:11px;
   font-weight:700;padding:3px 9px;border-radius:20px;}
 .cat .browse{border:none;background:rgba(255,255,255,.16);color:#fff;font-weight:800;
-  font-size:12.5px;padding:11px 0;transition:background .12s;}
+  font-size:12.5px;padding:11px 0;transition:background .12s;
+  display:flex;align-items:center;justify-content:center;gap:6px;}
 .cat .browse:active{background:rgba(255,255,255,.28);}
 
 /* ---- card face (text) ---- */
@@ -123,7 +126,8 @@ header.top{display:flex;align-items:center;justify-content:space-between;padding
 
 .lib-tabs{display:flex;gap:8px;padding:12px 16px 0;background:var(--panel);}
 .lib-tabs button{flex:1;padding:11px 0;border-radius:12px;font-weight:800;font-size:13.5px;
-  background:var(--line);color:var(--muted);}
+  background:var(--line);color:var(--muted);
+  display:flex;align-items:center;justify-content:center;gap:6px;}
 .lib-tabs button.active{background:#2b2b2f;color:#fff;}
 .lib-actions{display:flex;justify-content:flex-end;padding:10px 16px 0;max-width:600px;margin:0 auto;}
 .lib-actions button{font-size:12px;color:var(--muted);text-decoration:underline;}
@@ -139,13 +143,13 @@ header.top{display:flex;align-items:center;justify-content:space-between;padding
       <div class="tag">한 장을 뽑아, 이야기를 열어요</div>
     </div>
     <button class="icon-btn" onclick="openLibrary('fav')" aria-label="보관함">
-      <span>❤</span><span class="badge" id="favBadge" style="display:none">0</span>
+      <span id="hdrHeart"></span><span class="badge" id="favBadge" style="display:none">0</span>
     </button>
   </header>
 
   <div class="hero">
     <div>
-      <h2>🎲 전체 랜덤 뽑기</h2>
+      <h2><span id="heroDice"></span>전체 랜덤 뽑기</h2>
       <p>모든 카테고리를 섞어<br>질문 한 장을 뽑아요</p>
     </div>
     <button onclick="drawRandom(null)">뽑기</button>
@@ -157,11 +161,11 @@ header.top{display:flex;align-items:center;justify-content:space-between;padding
 
 <!-- Draw overlay -->
 <div class="overlay" id="overlay">
-  <div class="close-x" onclick="closeOverlay()">×</div>
+  <div class="close-x" id="closeX" onclick="closeOverlay()"></div>
   <div class="draw-card" id="drawCard"></div>
   <div class="modal-actions">
-    <button class="fav" id="favBtn" onclick="toggleFav()">♡ 저장</button>
-    <button class="primary" id="redrawBtn" onclick="redraw()">🔄 다시</button>
+    <button class="fav" id="favBtn" onclick="toggleFav()"></button>
+    <button class="primary" id="redrawBtn" onclick="redraw()"></button>
     <button onclick="closeOverlay()">닫기</button>
   </div>
 </div>
@@ -182,8 +186,8 @@ header.top{display:flex;align-items:center;justify-content:space-between;padding
     <div class="stitle">보관함<small>저장한 카드와 최근 기록</small></div>
   </div>
   <div class="lib-tabs">
-    <button id="tabFav" class="active" onclick="switchLibTab('fav')">❤ 즐겨찾기</button>
-    <button id="tabHist" onclick="switchLibTab('hist')">🕘 최근 기록</button>
+    <button id="tabFav" class="active" onclick="switchLibTab('fav')"></button>
+    <button id="tabHist" onclick="switchLibTab('hist')"></button>
   </div>
   <div class="lib-actions"><button id="clearBtn" onclick="clearCurrentLib()"></button></div>
   <div class="sheet-body"><div class="browse-grid" id="libGrid"></div></div>
@@ -191,11 +195,28 @@ header.top{display:flex;align-items:center;justify-content:space-between;padding
 
 <script>
 const CATS = {
-  character:   {ko:"개성",   en:"CHARACTER",    color:"#9285c9", icon:"🙋"},
-  if:          {ko:"만약에",  en:"IF",           color:"#e8871e", icon:"❓"},
-  life:        {ko:"인생",   en:"LIFE",         color:"#4fbf98", icon:"🧭"},
-  potentiality:{ko:"잠재력",  en:"POTENTIALITY", color:"#2e5a82", icon:"💡"},
-  relationship:{ko:"관계",   en:"RELATIONSHIP", color:"#e85d5d", icon:"🤝"}
+  character:   {ko:"개성",   en:"CHARACTER",    color:"#9285c9"},
+  if:          {ko:"만약에",  en:"IF",           color:"#e8871e"},
+  life:        {ko:"인생",   en:"LIFE",         color:"#4fbf98"},
+  potentiality:{ko:"잠재력",  en:"POTENTIALITY", color:"#2e5a82"},
+  relationship:{ko:"관계",   en:"RELATIONSHIP", color:"#e85d5d"}
+};
+
+/* --- hand-built line icons (inherit currentColor) --- */
+const _sw=(inner,s)=>`<svg class="ico" width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${inner}</svg>`;
+const ICON={
+  character:(s=24)=>_sw(`<circle cx="12" cy="4.8" r="2.4"/><path d="M12 8V15"/><path d="M12 9.4 6.3 4.9"/><path d="M12 9.4 17.7 4.9"/><path d="M12 15 8.2 21"/><path d="M12 15 15.8 21"/>`,s),
+  if:(s=24)=>_sw(`<path d="M8.5 9a3.5 3.5 0 1 1 5 3.15c-1.1.55-1.9 1.2-1.9 2.6"/><circle cx="11.6" cy="18.2" r="1.15" fill="currentColor" stroke="none"/>`,s),
+  life:(s=24)=>_sw(`<circle cx="12" cy="12" r="9.2"/><polygon points="16.3 7.7 14.1 14.1 7.7 16.3 9.9 9.9"/>`,s),
+  potentiality:(s=24)=>_sw(`<path d="M9 18h6"/><path d="M10 21.5h4"/><path d="M15.1 14.2c.2-1.1.8-1.9 1.6-2.7A5.8 5.8 0 1 0 7.3 11.5c.8.8 1.4 1.6 1.6 2.7"/>`,s),
+  relationship:(s=24)=>_sw(`<path d="M15 21v-1.6a3.6 3.6 0 0 0-3.6-3.6H7.6A3.6 3.6 0 0 0 4 19.4V21"/><circle cx="9.5" cy="7.8" r="3.4"/><path d="M18.2 21v-1.6a3.6 3.6 0 0 0-2.7-3.5"/><path d="M14.8 4.6a3.4 3.4 0 0 1 0 6.5"/>`,s),
+  dice:(s=24)=>_sw(`<rect x="3" y="3" width="18" height="18" rx="4.5"/><circle cx="8.4" cy="8.4" r="1.15" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r="1.15" fill="currentColor" stroke="none"/><circle cx="15.6" cy="15.6" r="1.15" fill="currentColor" stroke="none"/>`,s),
+  book:(s=24)=>_sw(`<path d="M3.5 4.5h4.5A3 3 0 0 1 11 7.5v12a2.5 2.5 0 0 0-2.5-2.5H3.5z"/><path d="M20.5 4.5H16a3 3 0 0 0-3 3v12a2.5 2.5 0 0 1 2.5-2.5h5z"/>`,s),
+  heart:(s=24)=>_sw(`<path d="M12 20.3 3.7 12a4.9 4.9 0 0 1 6.9-6.9l1.4 1.3 1.4-1.3A4.9 4.9 0 0 1 20.3 12z"/>`,s),
+  heartFill:(s=24)=>`<svg class="ico" width="${s}" height="${s}" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"><path d="M12 20.3 3.7 12a4.9 4.9 0 0 1 6.9-6.9l1.4 1.3 1.4-1.3A4.9 4.9 0 0 1 20.3 12z"/></svg>`,
+  refresh:(s=24)=>_sw(`<path d="M20 11a8 8 0 0 0-13.6-4.6L3.5 9"/><path d="M3.5 3.5V9H9"/><path d="M4 13a8 8 0 0 0 13.6 4.6L20.5 15"/><path d="M20.5 20.5V15H15"/>`,s),
+  clock:(s=24)=>_sw(`<circle cx="12" cy="12" r="9"/><path d="M12 7v5.2l3.4 2"/>`,s),
+  close:(s=24)=>_sw(`<path d="M6 6 18 18"/><path d="M18 6 6 18"/>`,s)
 };
 const Q = {
   character:[
@@ -374,12 +395,12 @@ function renderHome(){
     return `<div class="cat" style="background:${c.color}">
       <span class="cnt">${n}장</span>
       <div class="body" onclick="drawRandom('${k}')">
-        <span class="icon">${c.icon}</span>
+        <span class="icon">${ICON[k](30)}</span>
         <span class="ko">${c.ko}</span>
         <span class="en">${c.en}</span>
         <span style="font-size:11px;opacity:.85;margin-top:2px">눌러서 뽑기</span>
       </div>
-      <button class="browse" onclick="openBrowse('${k}')">📖 질문 탐색</button>
+      <button class="browse" onclick="openBrowse('${k}')">${ICON.book(15)} 질문 탐색</button>
     </div>`;
   }).join("");
   document.getElementById("totalCount").textContent="총 "+total+"장";
@@ -406,8 +427,8 @@ function showCard(flip){
   card.style.background=c.color;
   card.innerHTML=faceHTML(cat,i);
   const fav=document.getElementById("favBtn");
-  if(isFav(cat,i)){fav.classList.add("on");fav.innerHTML="❤ 저장됨";}
-  else{fav.classList.remove("on");fav.innerHTML="♡ 저장";}
+  if(isFav(cat,i)){fav.classList.add("on");fav.innerHTML=ICON.heartFill(16)+" 저장됨";}
+  else{fav.classList.remove("on");fav.innerHTML=ICON.heart(16)+" 저장";}
   ov.classList.add("show");
   if(flip){card.classList.remove("flip");void card.offsetWidth;card.classList.add("flip");}
 }
@@ -438,7 +459,7 @@ function openBrowse(cat){
 function miniHTML(cat,i){
   const c=CATS[cat];
   return `<div class="mini ${isFav(cat,i)?'faved':''}" style="background:${c.color}" onclick="openFromList('${cat}',${i})">
-    <span class="num">${i+1}</span><span class="heart">❤</span>
+    <span class="num">${i+1}</span><span class="heart">${ICON.heartFill(14)}</span>
     <div class="mini-face">
       <div class="mini-en" style="color:${c.color}">${c.en}</div>
       <div class="mini-ko" style="color:${c.color}">${c.ko}</div>
@@ -465,8 +486,8 @@ function renderLib(){
   document.getElementById("clearBtn").textContent=list.length?(libTab==="fav"?"즐겨찾기 비우기":"기록 지우기"):"";
   if(!list.length){
     grid.innerHTML=`<div class="empty" style="grid-column:1/-1">
-      <div class="big">${libTab==="fav"?"❤":"🕘"}</div>
-      ${libTab==="fav"?"아직 저장한 카드가 없어요.<br>카드를 뽑고 ♡ 저장을 눌러보세요.":"최근에 뽑은 카드가 없어요."}</div>`;
+      <div class="big">${libTab==="fav"?ICON.heart(40):ICON.clock(40)}</div>
+      ${libTab==="fav"?"아직 저장한 카드가 없어요.<br>카드를 뽑고 저장을 눌러보세요.":"최근에 뽑은 카드가 없어요."}</div>`;
     return;
   }
   grid.innerHTML=list.map(it=>miniHTML(it.cat,it.i)).join("");
@@ -477,6 +498,15 @@ function clearCurrentLib(){
   renderLib();
 }
 
+function initIcons(){
+  document.getElementById("hdrHeart").innerHTML=ICON.heart(20);
+  document.getElementById("heroDice").innerHTML=ICON.dice(19);
+  document.getElementById("closeX").innerHTML=ICON.close(20);
+  document.getElementById("redrawBtn").innerHTML=ICON.refresh(15)+" 다시";
+  document.getElementById("tabFav").innerHTML=ICON.heart(15)+" 즐겨찾기";
+  document.getElementById("tabHist").innerHTML=ICON.clock(15)+" 최근 기록";
+}
+initIcons();
 renderHome();
 </script>
 </body>
