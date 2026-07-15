@@ -30,6 +30,28 @@ header.top{display:flex;align-items:center;justify-content:space-between;padding
 .icon-btn .badge{position:absolute;top:-5px;right:-5px;background:#e85d5d;color:#fff;
   font-size:10px;min-width:18px;height:18px;border-radius:9px;padding:0 4px;font-weight:700;
   display:flex;align-items:center;justify-content:center;}
+.top-actions{display:flex;gap:8px;}
+
+/* about / help sheet */
+.about{max-width:600px;margin:0 auto;}
+.about-hero{background:linear-gradient(135deg,#2b2b2f,#454049);color:#fff;border-radius:18px;
+  padding:22px;margin-bottom:24px;}
+.about-hero h2{margin:0 0 9px;font-size:22px;font-weight:800;}
+.about-hero p{margin:0;font-size:13.5px;line-height:1.65;color:#d8d5db;}
+.about-h{font-size:15px;font-weight:800;margin:0 0 14px;}
+.steps{list-style:none;padding:0;margin:0 0 26px;counter-reset:s;}
+.steps li{position:relative;padding:1px 0 0 40px;margin-bottom:16px;font-size:13.5px;
+  line-height:1.6;color:#5b5b62;counter-increment:s;}
+.steps li::before{content:counter(s);position:absolute;left:0;top:0;width:27px;height:27px;
+  border-radius:50%;background:#2b2b2f;color:#fff;font-weight:800;font-size:13px;
+  display:flex;align-items:center;justify-content:center;}
+.steps b,.cats b{color:var(--ink);}
+.cats{list-style:none;padding:0;margin:0 0 22px;}
+.cats li{display:flex;align-items:center;gap:11px;padding:12px 2px;border-bottom:1px solid var(--line);
+  font-size:13.5px;color:#6b6b72;}
+.cats li:last-child{border-bottom:none;}
+.cats .dot{width:12px;height:12px;border-radius:50%;flex:0 0 auto;}
+.about-tip{font-size:12.5px;color:var(--muted);text-align:center;margin:4px 0 0;line-height:1.6;}
 
 .hero{border-radius:var(--radius);padding:20px;margin-bottom:18px;color:#fff;
   background:linear-gradient(135deg,#2b2b2f,#454049);box-shadow:0 10px 26px rgba(30,25,20,.16);
@@ -154,9 +176,12 @@ header.top{display:flex;align-items:center;justify-content:space-between;padding
       <h1>라포카드</h1>
       <div class="tag">한 장을 뽑아, 이야기를 열어요</div>
     </div>
-    <button class="icon-btn" onclick="openLibrary('fav')" aria-label="보관함">
-      <span id="hdrHeart"></span><span class="badge" id="favBadge" style="display:none">0</span>
-    </button>
+    <div class="top-actions">
+      <button class="icon-btn" onclick="openAbout()" aria-label="서비스 소개"><span id="hdrHelp"></span></button>
+      <button class="icon-btn" onclick="openLibrary('fav')" aria-label="보관함">
+        <span id="hdrHeart"></span><span class="badge" id="favBadge" style="display:none">0</span>
+      </button>
+    </div>
   </header>
 
   <div class="sec"><h3>질문 뽑기 · 모든 질문 보기</h3><span id="totalCount"></span></div>
@@ -204,6 +229,40 @@ header.top{display:flex;align-items:center;justify-content:space-between;padding
   <div class="sheet-body"><div class="browse-grid" id="libGrid"></div></div>
 </div>
 
+<!-- About sheet -->
+<div class="sheet" id="aboutSheet">
+  <div class="sheet-head">
+    <button class="back" onclick="closeAbout()">‹</button>
+    <div class="stitle">서비스 소개<small>라포카드 사용법 안내</small></div>
+  </div>
+  <div class="sheet-body">
+    <div class="about">
+      <div class="about-hero">
+        <h2>라포카드</h2>
+        <p>카테고리별 질문 카드로 어색함을 깨고, 흥미로운 대화를 여는 아이스브레이킹 도구예요. 한 장을 뽑아 서로에 대해 이야기해 보세요.</p>
+      </div>
+
+      <h3 class="about-h">이렇게 사용해요</h3>
+      <ol class="steps">
+        <li><b>카드 뽑기</b> — 카테고리를 누르면 그 안에서 랜덤으로, ‘전체’를 누르면 모든 질문을 섞어 한 장을 뽑아요. ‘다시’로 계속 뽑을 수 있어요.</li>
+        <li><b>모든 질문 보기 · 검색</b> — 각 카드의 ‘모든 질문 보기’로 질문을 둘러보고, 상단 검색창에 단어를 입력해 원하는 질문을 바로 찾을 수 있어요.</li>
+        <li><b>저장 · 기록</b> — 마음에 드는 질문은 하트로 저장하고, 오른쪽 위 하트 버튼의 보관함에서 즐겨찾기와 최근 뽑은 기록을 다시 볼 수 있어요.</li>
+      </ol>
+
+      <h3 class="about-h">5가지 카테고리</h3>
+      <ul class="cats">
+        <li><span class="dot" style="background:#9285c9"></span><b>개성</b>&nbsp; 나를 이루는 취향과 생각</li>
+        <li><span class="dot" style="background:#e8871e"></span><b>만약에</b>&nbsp; 상상력을 자극하는 가정</li>
+        <li><span class="dot" style="background:#4fbf98"></span><b>인생</b>&nbsp; 지나온 삶과 소중한 순간들</li>
+        <li><span class="dot" style="background:#2e5a82"></span><b>잠재력</b>&nbsp; 나의 재능과 가능성</li>
+        <li><span class="dot" style="background:#e85d5d"></span><b>관계</b>&nbsp; 소중한 사람들과의 이야기</li>
+      </ul>
+
+      <p class="about-tip">저장한 카드와 기록은 이 브라우저에만 보관돼요.<br>총 136개의 질문이 담겨 있어요.</p>
+    </div>
+  </div>
+</div>
+
 <script>
 const CATS = {
   character:   {ko:"개성",   en:"CHARACTER",    color:"#9285c9"},
@@ -228,7 +287,8 @@ const ICON={
   refresh:(s=24)=>_sw(`<path d="M20 11a8 8 0 0 0-13.6-4.6L3.5 9"/><path d="M3.5 3.5V9H9"/><path d="M4 13a8 8 0 0 0 13.6 4.6L20.5 15"/><path d="M20.5 20.5V15H15"/>`,s),
   clock:(s=24)=>_sw(`<circle cx="12" cy="12" r="9"/><path d="M12 7v5.2l3.4 2"/>`,s),
   close:(s=24)=>_sw(`<path d="M6 6 18 18"/><path d="M18 6 6 18"/>`,s),
-  search:(s=24)=>_sw(`<circle cx="10.5" cy="10.5" r="6.5"/><path d="M20 20l-4.8-4.8"/>`,s)
+  search:(s=24)=>_sw(`<circle cx="10.5" cy="10.5" r="6.5"/><path d="M20 20l-4.8-4.8"/>`,s),
+  help:(s=24)=>_sw(`<circle cx="12" cy="12" r="9.3"/><path d="M9.5 9.4a2.6 2.6 0 1 1 3.6 2.4c-.9.45-1.4 1-1.4 1.9"/><circle cx="11.7" cy="16.6" r=".95" fill="currentColor" stroke="none"/>`,s)
 };
 const Q = {
   character:[
@@ -525,6 +585,8 @@ function closeBrowse(){document.getElementById("browseSheet").classList.remove("
 let libTab="fav";
 function openLibrary(t){switchLibTab(t||"fav");document.getElementById("librarySheet").classList.add("show");}
 function closeLibrary(){document.getElementById("librarySheet").classList.remove("show");}
+function openAbout(){document.getElementById("aboutSheet").classList.add("show");}
+function closeAbout(){document.getElementById("aboutSheet").classList.remove("show");}
 function switchLibTab(t){
   libTab=t;
   document.getElementById("tabFav").classList.toggle("active",t==="fav");
@@ -550,6 +612,7 @@ function clearCurrentLib(){
 }
 
 function initIcons(){
+  document.getElementById("hdrHelp").innerHTML=ICON.help(21);
   document.getElementById("hdrHeart").innerHTML=ICON.heart(20);
   document.getElementById("closeX").innerHTML=ICON.close(20);
   document.getElementById("redrawBtn").innerHTML=ICON.refresh(15)+" 다시";
